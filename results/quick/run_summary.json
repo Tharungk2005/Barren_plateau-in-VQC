@@ -1,6 +1,6 @@
 {
   "mode": "quick",
   "convergence_target": 0.7396825396825397,
-  "total_wall_clock_s": 355.24991039998713,
-  "completed_at": "2026-10-10T14:57:52.664398+00:00"
+  "total_wall_clock_s": 224.75535940000555,
+  "completed_at": "2026-10-10T16:11:23.227587+00:00"
 }

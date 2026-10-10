@@ -12,6 +12,7 @@ Re-running with the same --mode resumes: already-completed (success) runs
 recorded in results/<mode>/*.csv are skipped, not re-executed.
 """
 import argparse
+import json
 import os
 import time
 
@@ -22,11 +23,61 @@ from src import experiment_runner as ER
 from src import circuits as C
 from src import plotting as PLT
 from src import export as EXP
+from src import training as T
+from src import metrics as M
+from src import baselines as B
 
+import numpy as np
 import pandas as pd
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+
+CLASS_NAMES = ["Good credit (-1)", "Bad credit (+1)"]
+
+
+def generate_confusion_matrices(main_df, prepared_by_qubits, baselines_df, df, y, cfg, figures_dir):
+    """Confusion matrices for the best-performing run of each VQC protocol
+    (by test balanced accuracy) and for the two headline classical
+    baselines (Logistic Regression on full features and on the matching
+    4-qubit PCA representation) -- required by the project specification
+    (mandatory graph: 'Confusion matrices for the final selected quantum
+    models and important classical baselines').
+    """
+    success = main_df[main_df.status == "success"]
+    for protocol in ["direct", "layerwise"]:
+        rows = success[success.protocol == protocol]
+        if len(rows) == 0:
+            continue
+        best = rows.loc[rows["test_balanced_accuracy"].idxmax()]
+        nq, depth, seed = int(best["n_qubits"]), int(best["n_layers"]), int(best["seed"])
+        hist_path = os.path.join(
+            ER.history_dir(cfg),
+            f"{best['run_id']}.json",
+        )
+        with open(hist_path) as f:
+            weights = np.array(json.load(f)["final_weights"])
+        qnode = C.make_qnode(nq, shots=None, noise_prob=0.0)
+        data = prepared_by_qubits[nq]
+        preds = np.array(qnode(data["X_test_angles"], weights))
+        m = M.compute_classification_metrics(data["y_test"], preds,
+                                               threshold=cfg["label_convention"]["decision_threshold"])
+        cm = np.array(m["confusion_matrix"])
+        PLT.plot_confusion_matrix(
+            cm, CLASS_NAMES,
+            title=f"Confusion matrix: best {protocol} run (qubits={nq}, depth={depth}, seed={seed},\n"
+                  f"test balanced accuracy={best['test_balanced_accuracy']:.3f})",
+            path_no_ext=os.path.join(figures_dir, f"confusion_matrix_vqc_{protocol}_best"),
+        )
+
+    baseline_results = B.train_and_evaluate_baselines(df, y, cfg, n_qubits_for_pca=4, seed=0)
+    for key, label in [("logreg_full", "Logistic Regression (full 61-d features)"),
+                        ("logreg_pca", "Logistic Regression (matching 4-qubit PCA features)")]:
+        cm = np.array(baseline_results[key]["test_metrics"]["confusion_matrix"])
+        PLT.plot_confusion_matrix(
+            cm, CLASS_NAMES, title=f"Confusion matrix: {label}",
+            path_no_ext=os.path.join(figures_dir, f"confusion_matrix_{key}"),
+        )
 
 
 def main():
@@ -149,6 +200,8 @@ def main():
         PLT.plot_shots_sensitivity(shots_df, figures_dir)
     if noise_df is not None:
         PLT.plot_noise_sensitivity(noise_df, figures_dir)
+
+    generate_confusion_matrices(main_df, prepared_by_qubits, baselines_df, df, y, cfg, figures_dir)
 
     manifest = ER.write_manifest(cfg)
     save_json({"mode": args.mode, "convergence_target": convergence_target,
