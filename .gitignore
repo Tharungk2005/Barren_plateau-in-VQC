@@ -1,0 +1,15 @@
+# Virtual environment
+venv/
+
+# Python caches
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# OS / editor
+.ipynb_checkpoints/
+*.DS_Store
+
+# Full-mode results (empty by default; large if the full grid is ever run)
+results/full/*
+!results/full/.gitkeep

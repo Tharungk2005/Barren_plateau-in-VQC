@@ -1,0 +1,140 @@
+{
+  "project_name": "vqc_layerwise_credit_risk",
+  "quick_mode": true,
+  "full_mode": false,
+
+  "label_convention": {
+    "good_credit_uci_class": 1,
+    "bad_credit_uci_class": 2,
+    "good_credit_encoded_label": -1,
+    "bad_credit_encoded_label": 1,
+    "positive_class_name": "bad_credit",
+    "decision_threshold": 0.0,
+    "note": "Model output o in [-1,1]. Predicted label = +1 (bad) if o > threshold else -1 (good). Positive class for precision/recall/F1/cost = bad credit (+1)."
+  },
+
+  "cost_matrix": {
+    "source": "UCI Statlog German Credit documentation, additional_info.summary",
+    "note": "Rows = actual class, columns = predicted class, in original UCI numbering (1=Good, 2=Bad).",
+    "cost_actual_good_predicted_bad": 1,
+    "cost_actual_bad_predicted_good": 5,
+    "cost_actual_good_predicted_good": 0,
+    "cost_actual_bad_predicted_bad": 0
+  },
+
+  "data": {
+    "uci_dataset_id": 144,
+    "uci_dataset_name": "Statlog (German Credit Data)",
+    "uci_url": "https://archive.ics.uci.edu/dataset/144/statlog+german+credit+data",
+    "uci_doi": "https://doi.org/10.24432/C5NC77",
+    "raw_cache_path": "data/raw/german_credit_raw.csv",
+    "raw_metadata_path": "data/raw/german_credit_metadata.json",
+    "expected_n_instances": 1000,
+    "expected_n_features": 20,
+    "split": {
+      "train_fraction": 0.70,
+      "val_fraction": 0.15,
+      "test_fraction": 0.15,
+      "split_seed": 2024,
+      "stratify": true
+    }
+  },
+
+  "preprocessing": {
+    "qubit_counts": [4, 6, 8],
+    "numeric_scaler": "StandardScaler",
+    "categorical_encoder": "OneHotEncoder",
+    "dim_reduction": "PCA",
+    "angle_range": [0.0, 3.14159265358979],
+    "unseen_category_handling": "ignore",
+    "processed_metadata_path": "data/processed/preprocessing_metadata.json",
+    "pipeline_path_template": "data/processed/pipeline_{n_qubits}q.joblib"
+  },
+
+  "circuit": {
+    "encoding_gate": "RY",
+    "ansatz_rotation_1": "RY",
+    "ansatz_rotation_2": "RZ",
+    "entangler": "CZ",
+    "entangler_topology": "ring",
+    "readout_qubit": 0,
+    "readout_observable": "PauliZ",
+    "diff_method_exact": "backprop",
+    "diff_method_shots": "parameter-shift",
+    "layer_init_range_direct": [0.0, 6.28318530717959],
+    "layer_init_near_zero_scale": 0.01
+  },
+
+  "training": {
+    "loss": "mse",
+    "optimizer": "adam",
+    "learning_rate": 0.01,
+    "batch_size": 32,
+    "quick_mode_updates_per_run": 150,
+    "full_mode_updates_per_run": 600,
+    "layerwise_budget_allocation": "equal_per_stage",
+    "convergence_target_margin": 0.03,
+    "convergence_patience_fraction": 0.2,
+    "convergence_patience_checkpoints": 3,
+    "plateau_grad_norm_threshold": 0.05
+  },
+
+  "experiment_grid": {
+    "full": {
+      "qubit_counts": [4, 6, 8],
+      "depths": [2, 6, 12, 24],
+      "protocols": ["direct", "layerwise"],
+      "seeds": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    },
+    "quick": {
+      "qubit_counts": [4, 6],
+      "depths": [2, 6, 12],
+      "protocols": ["direct", "layerwise"],
+      "seeds": [0, 1, 2]
+    }
+  },
+
+  "shots_experiment": {
+    "full_settings": ["analytic", 1000, 100],
+    "quick_settings": ["analytic", 1000, 100],
+    "full_subset": {"qubit_counts": [4, 6], "depths": [2, 12], "seeds": [0, 1, 2]},
+    "quick_subset": {"qubit_counts": [4], "depths": [2, 6], "seeds": [0, 1]}
+  },
+
+  "noise_experiment": {
+    "depolarizing_probabilities": [0.0, 0.001, 0.01],
+    "full_subset": {"qubit_counts": [4, 6], "depths": [2, 12], "seeds": [0, 1, 2]},
+    "quick_subset": {"qubit_counts": [4], "depths": [2], "seeds": [0, 1]},
+    "quick_subset_deviation_note": "Depth 6 was dropped from the quick-mode noise subset after the pilot measured ~124s for one depth-2/16-param parameter-shift+default.mixed run; depth-6 (48 params) was projected at several minutes per run x 8 remaining combinations, which was not a good use of session time for a predeclared feasibility-driven subset. Documented here per project spec section 8 ('document any deviation from the original experiment plan')."
+  },
+
+  "gradient_diagnostic": {
+    "qubit_counts": [4, 6, 8],
+    "depths": [1, 2, 4, 8, 12, 16, 20, 24],
+    "n_samples_full": 200,
+    "n_samples_quick": 60,
+    "init_distribution": "uniform_0_2pi"
+  },
+
+  "success_rate": {
+    "definition": "val_balanced_accuracy >= classical_logreg_val_balanced_accuracy - margin",
+    "margin": 0.05
+  },
+
+  "statistics": {
+    "paired_test": "wilcoxon",
+    "fallback_test": "permutation",
+    "confidence_level": 0.95,
+    "n_permutations": 10000
+  },
+
+  "random_seed_global": 42,
+
+  "paths": {
+    "results_quick": "results/quick",
+    "results_full": "results/full",
+    "tables": "tables",
+    "figures": "figures",
+    "reports": "reports"
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "source_url": "https://archive.ics.uci.edu/dataset/144/statlog+german+credit+data",
+  "doi": "https://doi.org/10.24432/C5NC77",
+  "uci_dataset_id": 144,
+  "retrieval_method": "ucimlrepo.fetch_ucirepo",
+  "retrieved_at": "2026-10-10T11:42:09.474480+00:00",
+  "n_instances": 1000,
+  "n_features": 20,
+  "target_column": "class",
+  "class_counts": {
+    "1": 700,
+    "2": 300
+  },
+  "categorical_attributes": [
+    "Attribute1",
+    "Attribute3",
+    "Attribute4",
+    "Attribute6",
+    "Attribute7",
+    "Attribute9",
+    "Attribute10",
+    "Attribute12",
+    "Attribute14",
+    "Attribute15",
+    "Attribute17",
+    "Attribute19",
+    "Attribute20"
+  ],
+  "numerical_attributes": [
+    "Attribute2",
+    "Attribute5",
+    "Attribute8",
+    "Attribute11",
+    "Attribute13",
+    "Attribute16",
+    "Attribute18"
+  ],
+  "attribute_descriptions": {
+    "Attribute1": "Status of existing checking account (qualitative)",
+    "Attribute2": "Duration in month (numerical)",
+    "Attribute3": "Credit history (qualitative)",
+    "Attribute4": "Purpose (qualitative)",
+    "Attribute5": "Credit amount (numerical)",
+    "Attribute6": "Savings account/bonds (qualitative)",
+    "Attribute7": "Present employment since (qualitative)",
+    "Attribute8": "Installment rate in percentage of disposable income (numerical)",
+    "Attribute9": "Personal status and sex (qualitative)",
+    "Attribute10": "Other debtors / guarantors (qualitative)",
+    "Attribute11": "Present residence since (numerical)",
+    "Attribute12": "Property (qualitative)",
+    "Attribute13": "Age in years (numerical)",
+    "Attribute14": "Other installment plans (qualitative)",
+    "Attribute15": "Housing (qualitative)",
+    "Attribute16": "Number of existing credits at this bank (numerical)",
+    "Attribute17": "Job (qualitative)",
+    "Attribute18": "Number of people being liable to provide maintenance for (numerical)",
+    "Attribute19": "Telephone (qualitative)",
+    "Attribute20": "foreign worker (qualitative)",
+    "class": "Target: 1 = good credit risk, 2 = bad credit risk"
+  },
+  "cost_matrix_source": "UCI metadata additional_info.summary (verbatim)",
+  "cost_matrix": {
+    "good->bad": 1,
+    "bad->good": 5,
+    "good->good": 0,
+    "bad->bad": 0
+  }
+}

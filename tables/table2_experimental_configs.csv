@@ -1,0 +1,7 @@
+n_qubits,depth,n_trainable_params,ansatz,optimizer,learning_rate,batch_size,seeds,total_update_budget,init_scheme_direct,init_scheme_layerwise_new_layer,gradient_method,shots,noise
+4,2,16,"RY+RZ per qubit per layer, CZ ring entangler",adam,0.01,32,"[0, 1, 2]",150,"[0.0, 6.28318530717959]","uniform(-0.01, 0.01)",backprop,analytic (exact),noiseless
+4,6,48,"RY+RZ per qubit per layer, CZ ring entangler",adam,0.01,32,"[0, 1, 2]",150,"[0.0, 6.28318530717959]","uniform(-0.01, 0.01)",backprop,analytic (exact),noiseless
+4,12,96,"RY+RZ per qubit per layer, CZ ring entangler",adam,0.01,32,"[0, 1, 2]",150,"[0.0, 6.28318530717959]","uniform(-0.01, 0.01)",backprop,analytic (exact),noiseless
+6,2,24,"RY+RZ per qubit per layer, CZ ring entangler",adam,0.01,32,"[0, 1, 2]",150,"[0.0, 6.28318530717959]","uniform(-0.01, 0.01)",backprop,analytic (exact),noiseless
+6,6,72,"RY+RZ per qubit per layer, CZ ring entangler",adam,0.01,32,"[0, 1, 2]",150,"[0.0, 6.28318530717959]","uniform(-0.01, 0.01)",backprop,analytic (exact),noiseless
+6,12,144,"RY+RZ per qubit per layer, CZ ring entangler",adam,0.01,32,"[0, 1, 2]",150,"[0.0, 6.28318530717959]","uniform(-0.01, 0.01)",backprop,analytic (exact),noiseless

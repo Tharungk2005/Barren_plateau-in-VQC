@@ -1,0 +1,38 @@
+{
+  "generated_at": "2026-10-10T14:57:52.576036+00:00",
+  "mode": "quick",
+  "environment": {
+    "python_version": "3.13.7 (tags/v3.13.7:bcee1c3, Aug 14 2025, 14:15:11) [MSC v.1944 64 bit (AMD64)]",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1",
+    "pandas": "3.0.6",
+    "scikit_learn": "1.9.1",
+    "matplotlib": "3.11.2",
+    "pennylane": "0.45.1",
+    "captured_at": "2026-10-10T14:57:52.658329+00:00"
+  },
+  "files": {
+    "main_grid_results.csv": {
+      "n_rows": 36,
+      "n_success": 36,
+      "n_failed": 0
+    },
+    "shots_experiment_results.csv": {
+      "n_rows": 24,
+      "n_success": 24,
+      "n_failed": 0
+    },
+    "noise_experiment_results.csv": {
+      "n_rows": 12,
+      "n_success": 12,
+      "n_failed": 0
+    },
+    "classical_baselines_results.csv": {
+      "n_rows": 12
+    },
+    "gradient_diagnostic_results.csv": {
+      "n_rows": 24
+    }
+  }
+}
